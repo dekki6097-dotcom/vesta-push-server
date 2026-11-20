@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: vesta-push-server
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node push_server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
