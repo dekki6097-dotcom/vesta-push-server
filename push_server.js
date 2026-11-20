@@ -64,12 +64,15 @@ db.collectionGroup('messages')
           if (!chatSnap.exists) continue;
 
           const chatData = chatSnap.data();
-          const participantIds = chatData.participantIds || [];
+          const participantIds = chatData.members || chatData.participantIds || [];
 
           const recipientIds = participantIds.filter(uid => uid !== message.senderId);
 
           for (const recipientId of recipientIds) {
-            const userSnap = await db.collection('users').doc(recipientId).get();
+            let userSnap = await db.collection('profiles').doc(recipientId).get();
+            if (!userSnap.exists) {
+              userSnap = await db.collection('users').doc(recipientId).get();
+            }
             if (!userSnap.exists) {
               console.log(`  Warning: User document not found: ${recipientId}`);
               continue;
