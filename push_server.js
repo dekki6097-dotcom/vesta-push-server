@@ -5,7 +5,12 @@ const { getMessaging } = require('firebase-admin/messaging');
 const path = require('path');
 
 // --- Firebase Init ---
-const serviceAccount = require(path.join(__dirname, 'serviceAccountKey.json'));
+let serviceAccount;
+if (process.env.GOOGLE_CREDENTIALS) {
+  serviceAccount = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+} else {
+  serviceAccount = require(path.join(__dirname, 'serviceAccountKey.json'));
+}
 
 initializeApp({
   credential: cert(serviceAccount)
